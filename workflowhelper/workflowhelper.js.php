@@ -15,8 +15,28 @@ function getElementsByClass (string,containerId) {  // Returns array
 
 /* Hide Archived Submissions */
 var archivedSubmissions = document.getElementById("aspect_submission_Submissions_div_completed-submissions");
-archivedSubmissions.style.display = "none";
-archivedSubmissions.previousElementSibling.style.display = "none";
+if (archivedSubmissions) {
+	var restoreArchived = document.createElement("a");
+	restoreArchived.id = "restoreArchived";
+	archivedSubmissions.parentNode.insertBefore(restoreArchived, archivedSubmissions.previousSibling);
+	hideArchived();
+}
+
+function hideArchived() {
+	s=document.getElementById('aspect_submission_Submissions_div_completed-submissions');
+	s.style.display = 'none';
+	y=document.getElementById('restoreArchived');
+	y.innerHTML='Show archived submissions';
+	y.href="javascript:(function(){showArchived();})();";
+}
+
+function showArchived() {
+	s=document.getElementById('aspect_submission_Submissions_div_completed-submissions');
+	s.style.display = 'block';
+	y=document.getElementById('restoreArchived');
+	y.innerHTML='Hide archived submissions';
+	y.href="javascript:(function(){hideArchived();})();";
+}
 
 
 /* Make tables sortable (and deduplicate the "Workflow tasks" table IDs) */
@@ -34,7 +54,6 @@ if (dupTables[1]) { dupTables[1].id = "aspect_workflow_Submissions_table_pool-ta
 /* BEGIN inclusion of Table sorting script  by Joost de Valk */
 <?php include "sortable.js"; ?>
 /* END inclusion of Table sorting script  by Joost de Valk */
-
 
 /* Add workflow IDs to each table row, to allow for chronological sorting */
 var rows = document.getElementsByTagName("tr");

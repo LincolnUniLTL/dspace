@@ -11,19 +11,46 @@ Uses a modified version of Table sorting script 1.5.7 by Joost de Valk (original
 
 Has been tested in DSpace 3.1 and 5.2 (XMLUI only) on Firefox, Chrome and IE.
 
-Installation
-------------
-1. Save the files to a php-enabled, https-enabled server of your choice (though see notes below).
+Option 1 - triggered by bookmark
+--------------------------------
+The downside for this option is that you have to click the bookmarklet every time you visit the page.
+
+Installation:
+1. Save the files to a php-enabled, https-enabled server of your choice (though see notes below about php functionality).
 1. Create a bookmark in the browser of your choice, and paste the following code into the URL/location (modifying the path as appropriate):
-```javascript:(function(){var%20s=document.createElement('script');s.id='workflowhelper';s.src='https://example.com/path/to/workflowhelper.js.php';document.body.appendChild(s);})();
+```
+javascript:(function(){var%20s=document.createElement('script');s.id='workflowhelper';s.src='https://example.com/path/to/workflowhelper.js.php';document.body.appendChild(s);})();
 ```
 
-Use
-------------
+Use:
 1. Navigate to your DSpace "Submissions" page.
 1. Click the bookmarklet.
 1. Click on any table header to sort that table.
 1. Refresh the page to remove all sorting. The bookmarklet needs to be clicked each time you visit the page.
+
+Option 2 - triggered automatically 
+----------------------------------
+Installation:
+1. Save the files to a php-enabled, https-enabled server of your choice (though see notes below about php functionality).
+1. Add the following code to dspace/webapps/xmlui/themes/[your-theme]/lib/xsl/core/page-structure.xsl near the bottom, in the general vicinity of other scripts like Google Analytics or what have you:
+```
+<!-- Workflowhelper javascript -->
+<script type="text/javascript"><xsl:text disable-output-escaping="yes">
+  if (location.href.indexOf('/submissions') > -1) {
+     var s=document.createElement('script');
+    s.id='localScript';
+    s.src='https://example.com/path/to/workflowhelper.js.php';
+    document.body.appendChild(s);
+  }
+</xsl:text></script>
+```
+
+Use:
+1. Navigate to your DSpace "Submissions" page.
+1. The script should take effect automatically.
+1. Click on "Show archived submissions" to see completed submissions.
+1. Click on any table header to sort that table.
+
 
 Notes
 ------------
@@ -33,12 +60,6 @@ https:// path in the bookmarklet is to avoid your browser disabling insecure con
 
 Potential for development
 ------------
-1) Modify so it can be included in the DSpace page itself
+1) Functionality to allow note-taking for items
 
-* only taking effect on the submissions page
-* triggered by a button on the page
-* remembering each user's previous state (based on cookies)
-
-2) Functionality to allow note-taking for items
-
-3) Version for JSPUI
+2) Version for JSPUI
